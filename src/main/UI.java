@@ -18,7 +18,7 @@ public class UI {
     public UI(GamePanel gp){
         this.gp = gp;
 
-        arial_40 = new Font("Arial", Font.PLAIN, 40);
+        arial_40 = new Font("Arial", Font.PLAIN, 38);
 
         SuperObject heart = new OBJ_Heart(gp);
         heartFull = heart.image;
@@ -46,6 +46,19 @@ public class UI {
             drawPlayerLife();
             drawIntellect();
             drawDialogScreen();
+        }
+        if(gp.gameState == gp.gameOverState){
+            drawPlayerLife();
+            drawIntellect();
+            drawGameOverScreen();
+        }
+        if(gp.gameState == gp.accomplishedState){
+            drawPlayerLife();
+            drawIntellect();
+            drawAccomplishedScreen();
+            if(gp.keyH.spacePressed){
+                gp.gameState = gp.playState;
+            }
         }
     }
 
@@ -90,6 +103,41 @@ public class UI {
         g2.drawString(text, x, y);
     }
 
+    public void drawAccomplishedScreen(){
+        String title = "MISSION";
+        String subtitle = "ACCOMPLISHED";
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 100F));
+
+        int titleLength = (int) g2.getFontMetrics().getStringBounds(title, g2).getWidth();
+        int titleX = gp.screenWidth / 2 - titleLength / 2;
+        int titleY = gp.screenHeight / 2 - 20;
+
+        g2.drawString(title, titleX, titleY);
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F)); // You can adjust the size if needed
+
+        int subtitleLength = (int) g2.getFontMetrics().getStringBounds(subtitle, g2).getWidth();
+        int subtitleX = gp.screenWidth / 2 - subtitleLength / 2;
+        int subtitleY = titleY + 100;
+
+        g2.drawString(subtitle, subtitleX, subtitleY);
+        g2.dispose();
+    }
+
+    public void drawGameOverScreen(){
+        String text = "GAME OVER";
+        int x;
+
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,100F));
+        int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        x = gp.screenWidth/2 - length/2;
+        int y = gp.screenHeight/2;
+
+        g2.drawString(text, x, y);
+        g2.dispose();
+    }
+
     public void drawPauseScreen(){
 
         String text = "PAUSED";
@@ -132,7 +180,4 @@ public class UI {
         g2.setStroke(new BasicStroke(5));
         g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
     }
-
-
-
 }

@@ -32,11 +32,10 @@ public class GamePanel extends JPanel implements Runnable{
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public SuperObject obj[] = new SuperObject[15];
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[10];
     public Entity queen[] = new Queen[2];
-
 
 
     //Game State
@@ -44,6 +43,10 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogState = 3;
+    public final int gameOverState = 4;
+    public final int accomplishedState = 5;
+
+    private Timer gameOverTimer;
 
     public GamePanel(){
 
@@ -54,7 +57,16 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
 
         ui = new UI(this);
+
+        gameOverTimer = new Timer(5000, e -> exitGame());
     }
+
+    private void exitGame() {
+        gameOverTimer.stop();
+        System.exit(0);
+    }
+
+
 
     public void setupGame(){
 
@@ -101,6 +113,10 @@ public class GamePanel extends JPanel implements Runnable{
         if (gameState == playState) {
             player.update();
 
+            if (player.life <= 0) {
+                gameState = gameOverState;
+            }
+
             for(int i = 0; i< monster.length; i++){
                 if(monster[i] != null){
                     if(monster[i].alive && !monster[i].dying){
@@ -108,6 +124,7 @@ public class GamePanel extends JPanel implements Runnable{
                     }
                     if(!monster[i].alive){
                         monster[i] = null;
+                        gameState = accomplishedState;
                     }
                 }
             }
@@ -115,6 +132,16 @@ public class GamePanel extends JPanel implements Runnable{
         if (gameState == pauseState) {
 
         }
+        if (gameState == gameOverState) {
+
+            if (!gameOverTimer.isRunning()) {
+                gameOverTimer.start();
+            }
+        }
+
+
+
+
     }
     public void paintComponent(Graphics g){
         super.paintComponent(g);

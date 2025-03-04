@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Glitch extends Entity {
 
@@ -9,7 +10,7 @@ public class Glitch extends Entity {
 
         name = "Glitch";
         speed = 0; // Set speed to 0 to prevent movement
-        maxLife = 4;
+        maxLife = 5;
         life = maxLife;
         direction = "down";
 
@@ -49,11 +50,12 @@ public class Glitch extends Entity {
 
     public void setDialog(){
         dialogs[0] = "Hello the chosen one!\nAre you ready to face me?";
-        dialogs[1] = "When you step on a letter, it will remind\nyou which number you are currently answering\nNow let's begin";
-        dialogs[2] = "1. What is the language of a computer?\nA. English       B. Filipino\nC. Binary        D. Spanish";
-        dialogs[3] = "2. What two numbers are used in binary?\n A. 1 and 5       B. 0 and 1\nC. 1 and 9        D. 10 and 11";
-        dialogs[4] = "3. How computers understand letters?\nA. By converting to binary\nB. By converting to decimal\nC. By converting to fraction";
-        dialogs[5] = "Once you reach intellect 4\nYou will be able to teleport!";
+        dialogs[1] = "This is much more difficult compared to\nhow they prepared you!";
+        dialogs[2] = "1. Should you share your home address with\n strangers online?";
+        dialogs[3] = "2. What should you do if you see something\n online that makes you uncomfortable?";
+        dialogs[4] = "3. Is it okay to use the same password for all\n your accounts?";
+        dialogs[5] = "4. Should you click random links?";
+        dialogs[6] = "5. If a notification popped up saying you won\n the lottery, would you beliveve it?";
     }
 
     public void speak() {
@@ -62,14 +64,75 @@ public class Glitch extends Entity {
 
     @Override
     public void draw(Graphics2D g2) {
-        // Call the superclass draw method to handle common drawing logic
-        super.draw(g2);
+        BufferedImage image = null;
 
+        int screenX = worldX - gp.player.worldX + gp.player.screenX;
+        int screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+        if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+                worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+                worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+                worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+
+            switch (direction) {
+                case "up":
+                    if (spriteNum == 1) {
+                        image = up1;
+                    }
+                    if (spriteNum == 2) {
+                        image = up2;
+                    }
+                    break;
+                case "down":
+                    if (spriteNum == 1) {
+                        image = down1;
+                    }
+                    if (spriteNum == 2) {
+                        image = down2;
+                    }
+                    if (spriteNum == 3) {
+                        image = down3;
+                    }
+                    if (spriteNum == 4) {
+                        image = down4;
+                    }
+                    break;
+                case "left":
+                    if (spriteNum == 1) {
+                        image = left1;
+                    }
+                    if (spriteNum == 2) {
+                        image = left2;
+                    }
+                    break;
+                case "right":
+                    if (spriteNum == 1) {
+                        image = right1;
+                    }
+                    if (spriteNum == 2) {
+                        image = right2;
+                    }
+                    break;
+            }
+
+            // Draw the image with scaling
+            g2.drawImage(image, screenX, screenY, (int)(gp.tileSize * 2), (int)(gp.tileSize * 2), null);
+
+            // Draw the health bar
+            drawHealthBar(g2);
+
+            if(dying){
+                dyingAnimation(g2);
+            }
+        }
+    }
+
+    private void drawHealthBar(Graphics2D g2) {
         // Draw the health bar
-        int healthBarWidth = 32;
-        int healthBarHeight = 5;
-        int healthBarX = worldX - gp.player.worldX + gp.player.screenX + (gp.tileSize - healthBarWidth) / 2;
-        int healthBarY = worldY - gp.player.worldY + gp.player.screenY - 10; // Position above the entity
+        int healthBarWidth = 64; // Adjusted for the larger size
+        int healthBarHeight = 10; // Adjusted for the larger size
+        int healthBarX = worldX - gp.player.worldX + gp.player.screenX + (gp.tileSize * 2 - healthBarWidth) / 2;
+        int healthBarY = worldY - gp.player.worldY + gp.player.screenY - 15; // Position above the entity
 
         // Draw the health bar background (slightly larger for the border effect)
         int borderWidth = 2; // Width of the border
@@ -77,7 +140,7 @@ public class Glitch extends Entity {
         g2.fillRect(healthBarX - borderWidth, healthBarY - borderWidth,
                 healthBarWidth + (2 * borderWidth), healthBarHeight + (2 * borderWidth));
 
-// Draw the health bar foreground based on current life
+        // Draw the health bar foreground based on current life
         g2.setColor(new Color(255, 0, 30)); // Foreground color
         double healthPercentage = (double) life / maxLife; // Calculate health percentage
         int currentHealthWidth = (int) (healthBarWidth * healthPercentage); // Calculate current health width

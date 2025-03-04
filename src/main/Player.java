@@ -9,7 +9,7 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
-    int hasKey = 0;
+    int hasAxe = 0;
     EventHandler eHandler;
 
     public Player(GamePanel gp, KeyHandler keyH){
@@ -33,9 +33,9 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues(){
-        worldX = gp.tileSize * 23;
-        worldY = gp.tileSize * 21;
-        speed = 4;
+        worldX = gp.tileSize * 11;
+        worldY = gp.tileSize * 37;
+        speed = 10;
         direction = "down";
 
         maxLife = 6;
@@ -122,16 +122,19 @@ public class Player extends Entity {
             String objectName = gp.obj[i].name;
 
             switch(objectName){
-                case "Key":
-                    hasKey++;
+                case "Axe":
+                    hasAxe++;
                     gp.obj[i] = null;
-                    System.out.println("Key: " +hasKey);
+                    System.out.println("Axe: " +hasAxe);
                     break;
-                case "Door":
-                    if(hasKey>0){
+                case "rock":
+                    if(hasAxe>0){
                         gp.obj[i] = null;
-                        hasKey--;
-                        System.out.println("Key: " +hasKey);
+                        hasAxe--;
+                        System.out.println("Axe: " +hasAxe);
+                    } else {
+                        gp.ui.currentDialog = "You need an axe to break this rock!";
+                        gp.gameState = gp.dialogState;
                     }
                     break;
             }
