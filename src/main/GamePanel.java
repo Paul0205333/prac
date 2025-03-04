@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable{
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[10];
+    public Entity queen[] = new Queen[2];
 
 
 
@@ -43,7 +44,6 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogState = 3;
-    public final int questionState = 4;
 
     public GamePanel(){
 
@@ -60,6 +60,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setQueen();
         aSetter.setMonster();
 
         gameState = playState;
@@ -102,7 +103,12 @@ public class GamePanel extends JPanel implements Runnable{
 
             for(int i = 0; i< monster.length; i++){
                 if(monster[i] != null){
-                    monster[i].update();
+                    if(monster[i].alive && !monster[i].dying){
+                        monster[i].update();
+                    }
+                    if(!monster[i].alive){
+                        monster[i] = null;
+                    }
                 }
             }
         }
@@ -123,6 +129,13 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
 
+        for (int i = 0; i < queen.length; i++) {
+            if (queen[i] != null) {
+                queen[i].draw(g2);
+            }
+        }
+
+        player.draw(g2);
         //NPC drawing
         for(int i = 0; i<npc.length; i++){
             if(npc[i] != null){
@@ -130,14 +143,13 @@ public class GamePanel extends JPanel implements Runnable{
             }
         }
 
+        ui.draw(g2);
+
         for(int i = 0; i<monster.length; i++){
             if(monster[i] != null){
                 monster[i].draw(g2);
             }
         }
-
-        player.draw(g2);
-        ui.draw(g2);
         g2.dispose();
     }
 

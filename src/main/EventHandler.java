@@ -29,6 +29,7 @@ public class EventHandler {
         if(hit(22, 22, "left")){b(gp.dialogState);}
         if(hit(24, 20, "left")){c(gp.dialogState);}
         if(hit(24, 22, "left")){d(gp.dialogState);}
+        if(hit(40, 10, "down")){damagePit(gp.dialogState);}
 
         if(intellect == 4){
             if(hit(26, 21, "right")){teleport(gp.dialogState);}

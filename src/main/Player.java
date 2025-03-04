@@ -79,6 +79,9 @@ public class Player extends Entity {
             int glitchIndex = gp.cChecker.checkEntity(this, gp.monster);
             interactGlitch(glitchIndex);
 
+            int qIndex = gp.cChecker.checkEntity(this, gp.queen);
+            interactQueen(qIndex);
+
 
             gp.eHandler.checkEvent();
 
@@ -152,6 +155,19 @@ public class Player extends Entity {
             if(gp.keyH.spacePressed) {
                 gp.gameState = gp.dialogState;
                 gp.monster[i].speak();
+            }
+            if (gp.monster[i].life <= 0){
+                gp.monster[i].dying = true;
+            }
+        }
+    }
+
+    public void interactQueen(int i){
+        if (i != 999){
+
+            if(gp.keyH.spacePressed) {
+                gp.gameState = gp.dialogState;
+                gp.queen[i].speak();
             }
         }
     }

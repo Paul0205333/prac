@@ -30,12 +30,19 @@ public class AssetSetter {
         gp.npc[0] = new NPC_OldMan(gp);
         gp.npc[0].worldX = gp.tileSize*21;
         gp.npc[0].worldY = gp.tileSize*21;
+
     }
 
     public void setMonster(){
         gp.monster[0] = new Glitch(gp);
         gp.monster[0].worldX = 39 * gp.tileSize;
         gp.monster[0].worldY = 10 * gp.tileSize;
+    }
+
+    public void setQueen(){
+        gp.queen[0] = new Queen(gp);
+        gp.queen[0].worldX = gp.tileSize*24;
+        gp.queen[0].worldY = gp.tileSize*7;
     }
 
 }
