@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class MainMenu extends JFrame {
@@ -44,26 +43,27 @@ public class MainMenu extends JFrame {
 
         // Set start button size and position (centered at the bottom)
         startButton.setBounds(320, 350, 100, 50); // Adjusted size and position
-        setButtonIcon(startButton, "C:\\Users\\lored\\Downloads\\1Start.png");
+        setButtonIcon(startButton, "C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\1Start.png");
 
         startButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                setButtonIcon(startButton, "C:\\Users\\lored\\Downloads\\2Start.png"); // Change icon on hover
+                setButtonIcon(startButton, "C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\2Start.png");
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                setButtonIcon(startButton, "C:\\Users\\lored\\Downloads\\1Start.png"); // Revert icon when not hovering
+                setButtonIcon(startButton, "C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\1Start.png");
             }
         });
 
 
 
         startButton.addActionListener(e -> {
-            // Start button action (e.g., start the game)
             this.dispose();
+
             GameFrame gameFrame = new GameFrame();
+
         });
 
         // Add the start button to the layered pane
@@ -77,17 +77,17 @@ public class MainMenu extends JFrame {
 
         // Set exit button size and position (centered at the bottom)
         exitButton.setBounds(320, 420, 100, 50); // Adjusted size and position
-        setButtonIcon(exitButton, "C:\\Users\\lored\\Downloads\\1Q.png"); // Set exit button icon
+        setButtonIcon(exitButton, "C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\1Q.png");
 
         exitButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                setButtonIcon(exitButton, "C:\\Users\\lored\\Downloads\\2Q.png"); // Change icon on hover
+                setButtonIcon(exitButton, "C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\2Q.png");
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                setButtonIcon(exitButton, "C:\\Users\\lored\\Downloads\\1Q.png"); // Revert icon when not hovering
+                setButtonIcon(exitButton, "C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\1Q.png");
             }
         });
 
@@ -111,10 +111,10 @@ public class MainMenu extends JFrame {
     private void loadImages() {
         menuImages = new BufferedImage[4];
         try {
-            menuImages[0] = ImageIO.read(new File("C:\\Users\\lored\\Downloads\\mainMenu1.png"));
-            menuImages[1] = ImageIO.read(new File("C:\\Users\\lored\\Downloads\\mainMenu2.png"));
-            menuImages[2] = ImageIO.read(new File("C:\\Users\\lored\\Downloads\\mainMenu3.png"));
-            menuImages[3] = ImageIO.read(new File("C:\\Users\\lored\\Downloads\\mainMenu4.png"));
+            menuImages[0] = ImageIO.read(getClass().getResourceAsStream("/res/menu/mainMenu1.png"));
+            menuImages[1] = ImageIO.read(getClass().getResourceAsStream("/res/menu/mainMenu2.png"));
+            menuImages[2] = ImageIO.read(getClass().getResourceAsStream("/res/menu/mainMenu3.png"));
+            menuImages[3] = ImageIO.read(getClass().getResourceAsStream("/res/menu/mainMenu4.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

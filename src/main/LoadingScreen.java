@@ -61,7 +61,7 @@ public class LoadingScreen extends JFrame {
 
     private void updateLoadingImage() {
         // Load and resize the image
-        ImageIcon originalIcon = new ImageIcon("C:\\Users\\lored\\Downloads\\mainMenu1.png");
+        ImageIcon originalIcon = new ImageIcon("C:\\Users\\lored\\IdeaProjects\\Project\\Prac\\src\\res\\menu\\mainMenu1.png");
         Image img = originalIcon.getImage();
         Image resizedImg = img.getScaledInstance(800, 600, Image.SCALE_SMOOTH); // Resize to 800x600
         loadingLabel.setIcon(new ImageIcon(resizedImg));

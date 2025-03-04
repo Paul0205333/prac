@@ -1,28 +1,49 @@
 package main;
 
+import main.OBJ.SuperObject;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable{
 
+
+    UI ui;
     final int originalTileSize = 16;
     final int scale = 3;
 
     public final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12;
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
+
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
 
     int FPS = 60;
-    KeyHandler keyH = new KeyHandler();
+
+    TileManager tileM = new TileManager(this);
+    public KeyHandler keyH = new KeyHandler(this);
+    public EventHandler eHandler = new EventHandler(this);
     Thread gameThread;
-    Player player = new Player(this, keyH);
+    public CollisionChecker cChecker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
+    public Player player = new Player(this, keyH);
+    public SuperObject obj[] = new SuperObject[10];
+    public Entity npc[] = new Entity[10];
+    public Entity monster[] = new Entity[10];
 
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
 
+
+    //Game State
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int dialogState = 3;
+    public final int questionState = 4;
 
     public GamePanel(){
 
@@ -31,7 +52,19 @@ public class GamePanel extends JPanel implements Runnable{
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+
+        ui = new UI(this);
     }
+
+    public void setupGame(){
+
+        aSetter.setObject();
+        aSetter.setNPC();
+        aSetter.setMonster();
+
+        gameState = playState;
+    }
+
 
     public void startGameThread(){
 
@@ -64,14 +97,47 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(){
 
-        player.update();
+        if (gameState == playState) {
+            player.update();
 
+            for(int i = 0; i< monster.length; i++){
+                if(monster[i] != null){
+                    monster[i].update();
+                }
+            }
+        }
+        if (gameState == pauseState) {
+
+        }
     }
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g;
+        tileM.draw(g2);
+
+        //OBJ drawing
+        for(int i = 0; i < obj.length; i++){
+            if (obj[i] != null) {
+                obj[i].draw(g2, this);
+            }
+        }
+
+        //NPC drawing
+        for(int i = 0; i<npc.length; i++){
+            if(npc[i] != null){
+                npc[i].draw(g2);
+            }
+        }
+
+        for(int i = 0; i<monster.length; i++){
+            if(monster[i] != null){
+                monster[i].draw(g2);
+            }
+        }
+
         player.draw(g2);
+        ui.draw(g2);
         g2.dispose();
     }
 

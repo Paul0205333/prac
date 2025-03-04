@@ -6,11 +6,9 @@ public class MainApplication {
         LoadingScreen loadingScreen = new LoadingScreen();
         loadingScreen.showLoadingScreen();
 
-
-
         // Simulate loading process (e.g., loading resources)
         try {
-            Thread.sleep(3000); // Simulate a loading delay of 3 seconds
+            Thread.sleep(3000); // Simulate a loading delay of 3 secondswd
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
