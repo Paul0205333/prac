@@ -7,8 +7,7 @@ public class User {
 	private String password;
 	private String phoneNumber;
 	
-	User(String userID, String name,String email, String password, String phoneNumber){
-		this.userID = userID;
+	User(String name,String email, String password, String phoneNumber){
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -33,5 +32,6 @@ public class User {
 	
 	public String getPhoneNumber() {
 		return phoneNumber;
-	}
+	} 
+	
 }
