@@ -74,9 +74,8 @@ public class Main extends JFrame {
         JPanel loginPanel = new JPanel();
         loginPanel.setBackground(PANEL_COLOR);
         loginPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            new EmptyBorder(40, 40, 40, 40)
-        ));
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                new EmptyBorder(40, 40, 40, 40)));
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
         loginPanel.setPreferredSize(new Dimension(300, 400));
 
@@ -125,9 +124,8 @@ public class Main extends JFrame {
         JPanel regPanel = new JPanel();
         regPanel.setBackground(PANEL_COLOR);
         regPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            new EmptyBorder(40, 40, 40, 40)
-        ));
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                new EmptyBorder(40, 40, 40, 40)));
         regPanel.setLayout(new BoxLayout(regPanel, BoxLayout.Y_AXIS));
         regPanel.setPreferredSize(new Dimension(300, 500));
 
@@ -194,9 +192,8 @@ public class Main extends JFrame {
         field.setMaximumSize(new Dimension(220, 35));
         field.setFont(new Font("Arial", Font.PLAIN, 12));
         field.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            new EmptyBorder(5, 10, 5, 10)
-        ));
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                new EmptyBorder(5, 10, 5, 10)));
         return field;
     }
 
@@ -206,9 +203,8 @@ public class Main extends JFrame {
         field.setMaximumSize(new Dimension(220, 35));
         field.setFont(new Font("Arial", Font.PLAIN, 12));
         field.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
-            new EmptyBorder(5, 10, 5, 10)
-        ));
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                new EmptyBorder(5, 10, 5, 10)));
         return field;
     }
 
@@ -222,17 +218,18 @@ public class Main extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         // Add hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(BUTTON_HOVER_COLOR);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(BUTTON_COLOR);
             }
         });
-        
+
         return button;
     }
 
@@ -244,17 +241,18 @@ public class Main extends JFrame {
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         // Add hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setForeground(TEXT_COLOR);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setForeground(LINK_COLOR);
             }
         });
-        
+
         return button;
     }
 
@@ -272,7 +270,8 @@ public class Main extends JFrame {
                 return;
             }
 
-            // sends the variable as arguments to the registerUser method in Authentication System
+            // sends the variable as arguments to the registerUser method in Authentication
+            // System
             if (authSystem.registerUser(username, email, password, phoneNumber)) {
                 statusLabel.setText("Registration successful! Please login.");
                 authSystem.displayAllUsers();
@@ -323,10 +322,10 @@ public class Main extends JFrame {
         } catch (Exception e) {
             // Use default look and feel if system look and feel is not available
         }
-        
- 
 
         SwingUtilities.invokeLater(() -> {
+            MainPage mainPage = new MainPage();
+            mainPage.setVisible(true);
             Main gui = new Main();
             gui.setVisible(true);
         });
