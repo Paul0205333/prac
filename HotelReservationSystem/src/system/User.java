@@ -14,9 +14,15 @@ public class User {
 		this.phoneNumber = phoneNumber;
 	}
 	
-	public String getUser() {
-		return userID;
-	}
+
+    private String generateUserID() {
+        return "USER" + System.currentTimeMillis();
+    }
+
+  
+    public String getUserID() {
+        return userID;
+    }
 	
 	public String getName() {
 		return name;
