@@ -1,225 +1,301 @@
 package system;
 
-public class Room {
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+public class Reservation {
 	
-    private String roomId;
-    private String roomType;
-    private double price;
-    private boolean isAvailable;
-    private int capacity;
-    private String amenities;
+    private String reservationId;
+    private User user;
+    private Room room;
+    private java.util.Date checkInDate;
+    private java.util.Date checkOutDate;
+    private int numberOfGuests;
+    private double totalPrice;
+    private String status;
+
+    // Reservation status constants
+    public static final String STATUS_CONFIRMED = "CONFIRMED";
+    public static final String STATUS_CANCELLED = "CANCELLED";
+    public static final String STATUS_CHECKED_IN = "CHECKED_IN";
+    public static final String STATUS_CHECKED_OUT = "CHECKED_OUT";
+    public static final String STATUS_PENDING = "PENDING";
 
     // Default constructor
-    Room() {
-        this.isAvailable = true; // Rooms are available by default
-        this.amenities = ""; // Default empty amenities
+    Reservation() {
+        this.status = STATUS_PENDING;
+        this.totalPrice = 0.0;
     }
 
     // Parameterized constructor
-    public Room(String roomId, String roomType, double price, int capacity, String amenities) {
-        this.roomId = roomId;
-        this.roomType = roomType;
-        this.price = price;
-        this.capacity = capacity;
-        this.amenities = amenities != null ? amenities : "";
-        this.isAvailable = true; // New rooms are available by default
+    public Reservation(String reservationId, User user, Room room, Date checkInDate, 
+                      Date checkOutDate, int numberOfGuests) {
+        this.reservationId = reservationId;
+        this.user = user;
+        this.room = room;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.numberOfGuests = numberOfGuests;
+        this.status = STATUS_CONFIRMED;
+        this.totalPrice = calculateTotalPrice();
     }
 
-    // Alternative constructor without amenities
-    public Room(String roomId, String roomType, double price, int capacity) {
-        this(roomId, roomType, price, capacity, "");
+    // Alternative constructor with status
+    public Reservation(String reservationId, User user, Room room, Date checkInDate, 
+                      Date checkOutDate, int numberOfGuests, String status) {
+        this(reservationId, user, room, checkInDate, checkOutDate, numberOfGuests);
+        this.status = status != null ? status : STATUS_CONFIRMED;
     }
 
     // Getter methods
-    public String getRoomId() {
-        return roomId;
+    public String getReservationId() {
+        return reservationId;
     }
 
-    public String getRoomType() {
-        return roomType;
+    public User getUser() {
+        return user;
     }
 
-    public double getPrice() {
-        return price;
+    public Room getRoom() {
+        return room;
     }
 
-    public boolean getIsAvailable() {
-        return isAvailable;
-    }
-    
-    // Alternative getter method with standard naming convention
-    public boolean isAvailable() {
-        return isAvailable;
+    public java.util.Date getCheckInDate() {
+        return checkInDate;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public java.util.Date getCheckOutDate() {
+        return checkOutDate;
     }
 
-    public String getAmenities() {
-        return amenities;
+    public int getNumberOfGuests() {
+        return numberOfGuests;
     }
-    
-    // Missing method that Hotel class expects
-    public String getRoomNumber() {
-        return roomId; // Assuming roomId serves as room number
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     // Setter methods
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
+    public void setReservationId(String reservationId) {
+        this.reservationId = reservationId;
     }
 
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setPrice(double price) {
-        if (price >= 0) {
-            this.price = price;
+    public void setRoom(Room room) {
+        this.room = room;
+        // Recalculate total price when room changes
+        this.totalPrice = calculateTotalPrice();
+    }
+
+    public void setCheckInDate(Date checkInDate) {
+        this.checkInDate = checkInDate;
+        // Recalculate total price when dates change
+        this.totalPrice = calculateTotalPrice();
+    }
+
+    public void setCheckOutDate(Date checkOutDate) {
+        this.checkOutDate = checkOutDate;
+        // Recalculate total price when dates change
+        this.totalPrice = calculateTotalPrice();
+    }
+
+    public void setNumberOfGuests(int numberOfGuests) {
+        if (numberOfGuests > 0) {
+            this.numberOfGuests = numberOfGuests;
         } else {
-            System.out.println("Price cannot be negative");
+            System.out.println("Number of guests must be positive");
         }
     }
 
-    public void setAvailable(boolean available) {
-        this.isAvailable = available;
-    }
-    
-    // Alternative setter with standard naming
-    public void setIsAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setCapacity(int capacity) {
-        if (capacity > 0) {
-            this.capacity = capacity;
-        } else {
-            System.out.println("Capacity must be positive");
+    // Calculate total price based on room rate and number of nights
+    public double calculateTotalPrice() {
+        if (room == null || checkInDate == null || checkOutDate == null) {
+            return 0.0;
         }
+
+        // Calculate number of nights
+        long diffInMillies = checkOutDate.getTime() - checkInDate.getTime();
+        long numberOfNights = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        
+        // Ensure at least 1 night
+        if (numberOfNights <= 0) {
+            numberOfNights = 1;
+        }
+
+        // Calculate base price (room rate * number of nights)
+        double basePrice = room.getPrice() * numberOfNights;
+        
+        // You can add additional charges here if needed
+        // For example: taxes, service charges, etc.
+        double taxRate = 0.10; // 10% tax
+        double tax = basePrice * taxRate;
+        
+        this.totalPrice = basePrice + tax;
+        return this.totalPrice;
     }
 
-    public void setAmenities(String amenities) {
-        this.amenities = amenities != null ? amenities : "";
+    // Cancel the reservation
+    public void cancelReservation() {
+        if (STATUS_CANCELLED.equals(status)) {
+            System.out.println("Reservation " + reservationId + " is already cancelled");
+            return;
+        }
+
+        if (STATUS_CHECKED_IN.equals(status) || STATUS_CHECKED_OUT.equals(status)) {
+            System.out.println("Cannot cancel reservation " + reservationId + 
+                             " - Guest has already checked in/out");
+            return;
+        }
+
+        // Update reservation status
+        this.status = STATUS_CANCELLED;
+        
+        // Make the room available again
+        if (room != null) {
+            room.setAvailable(true);
+        }
+        
+        System.out.println("Reservation " + reservationId + " has been cancelled successfully");
     }
 
     // Utility methods
-    public void displayRoomInfo() {
-        System.out.println("Room Information:");
-        System.out.println("Room ID: " + roomId);
-        System.out.println("Room Type: " + roomType);
-        System.out.println("Price: $" + String.format("%.2f", price));
-        System.out.println("Capacity: " + capacity + " guests");
-        System.out.println("Available: " + (isAvailable ? "Yes" : "No"));
-        System.out.println("Amenities: " + (amenities.isEmpty() ? "None" : amenities));
-        System.out.println("------------------------");
-    }
-
-    public void addAmenity(String amenity) {
-        if (amenity != null && !amenity.trim().isEmpty()) {
-            if (amenities.isEmpty()) {
-                amenities = amenity.trim();
-            } else {
-                amenities += ", " + amenity.trim();
-            }
+    public long getNumberOfNights() {
+        if (checkInDate == null || checkOutDate == null) {
+            return 0;
         }
+        
+        long diffInMillies = checkOutDate.getTime() - checkInDate.getTime();
+        long nights = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        return nights > 0 ? nights : 1;
     }
 
-    public void removeAmenity(String amenity) {
-        if (amenity != null && !amenities.isEmpty()) {
-            amenities = amenities.replace(amenity, "").replaceAll(", ,", ",").trim();
-            if (amenities.startsWith(",")) {
-                amenities = amenities.substring(1).trim();
-            }
-            if (amenities.endsWith(",")) {
-                amenities = amenities.substring(0, amenities.length() - 1).trim();
-            }
+    public boolean isActive() {
+        return STATUS_CONFIRMED.equals(status) || STATUS_CHECKED_IN.equals(status);
+    }
+
+    public boolean isCancelled() {
+        return STATUS_CANCELLED.equals(status);
+    }
+
+    public boolean isCompleted() {
+        return STATUS_CHECKED_OUT.equals(status);
+    }
+
+    public void checkIn() {
+        if (!STATUS_CONFIRMED.equals(status)) {
+            System.out.println("Cannot check in - reservation status is: " + status);
+            return;
         }
-    }
 
-    public boolean hasAmenity(String amenity) {
-        return amenity != null && amenities.toLowerCase().contains(amenity.toLowerCase());
-    }
-
-    public void bookRoom() {
-        if (isAvailable) {
-            isAvailable = false;
-            System.out.println("Room " + roomId + " has been booked");
-        } else {
-            System.out.println("Room " + roomId + " is already booked");
+        Date currentDate = new Date();
+        if (currentDate.before(checkInDate)) {
+            System.out.println("Cannot check in before check-in date");
+            return;
         }
+
+        this.status = STATUS_CHECKED_IN;
+        if (room != null) {
+            room.setAvailable(false);
+        }
+        System.out.println("Check-in successful for reservation " + reservationId);
     }
 
     public void checkOut() {
-        if (!isAvailable) {
-            isAvailable = true;
-            System.out.println("Room " + roomId + " is now available for booking");
-        } else {
-            System.out.println("Room " + roomId + " is already available");
+        if (!STATUS_CHECKED_IN.equals(status)) {
+            System.out.println("Cannot check out - guest has not checked in");
+            return;
         }
-    }
 
-    public double calculateTotalPrice(int numberOfNights) {
-        if (numberOfNights > 0) {
-            return price * numberOfNights;
+        this.status = STATUS_CHECKED_OUT;
+        if (room != null) {
+            room.setAvailable(true);
         }
-        return 0.0;
+        System.out.println("Check-out successful for reservation " + reservationId);
     }
 
-    public boolean canAccommodate(int numberOfGuests) {
-        return numberOfGuests <= capacity && numberOfGuests > 0;
+    public void displayReservationInfo() {
+        System.out.println("Reservation Information:");
+        System.out.println("Reservation ID: " + reservationId);
+        System.out.println("Guest: " + (user != null ? user.getName() : "N/A"));
+        System.out.println("Room: " + (room != null ? room.getRoomId() + " (" + room.getRoomType() + ")" : "N/A"));
+        System.out.println("Check-in Date: " + checkInDate);
+        System.out.println("Check-out Date: " + checkOutDate);
+        System.out.println("Number of Nights: " + getNumberOfNights());
+        System.out.println("Number of Guests: " + numberOfGuests);
+        System.out.println("Total Price: $" + String.format("%.2f", totalPrice));
+        System.out.println("Status: " + status);
+        System.out.println("------------------------");
     }
 
-    // Override equals method for proper comparison
+    public boolean isValidReservation() {
+        return reservationId != null && !reservationId.trim().isEmpty() &&
+               user != null &&
+               room != null &&
+               checkInDate != null &&
+               checkOutDate != null &&
+               checkOutDate.after(checkInDate) &&
+               numberOfGuests > 0 &&
+               numberOfGuests <= room.getCapacity();
+    }
+
+    public boolean isDateConflict(Date otherCheckIn, Date otherCheckOut) {
+        if (checkInDate == null || checkOutDate == null || 
+            otherCheckIn == null || otherCheckOut == null) {
+            return false;
+        }
+        
+        // Check if dates overlap
+        return !(otherCheckOut.before(checkInDate) || otherCheckIn.after(checkOutDate));
+    }
+
+    public String getReservationSummary() {
+        return String.format("Reservation %s: %s staying in %s from %s to %s (%d nights) - Status: %s",
+            reservationId,
+            user != null ? user.getName() : "Unknown",
+            room != null ? room.getRoomId() : "Unknown",
+            checkInDate,
+            checkOutDate,
+            getNumberOfNights(),
+            status);
+    }
+
+    // Override methods for proper object handling
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        Room room = (Room) obj;
-        return roomId != null ? roomId.equals(room.roomId) : room.roomId == null;
+        Reservation that = (Reservation) obj;
+        return reservationId != null ? reservationId.equals(that.reservationId) : that.reservationId == null;
     }
 
-    // Override hashCode method
     @Override
     public int hashCode() {
-        return roomId != null ? roomId.hashCode() : 0;
+        return reservationId != null ? reservationId.hashCode() : 0;
     }
 
-    // Override toString method for easy printing
     @Override
     public String toString() {
-        return "Room{" +
-                "roomId='" + roomId + '\'' +
-                ", roomType='" + roomType + '\'' +
-                ", price=" + price +
-                ", isAvailable=" + isAvailable +
-                ", capacity=" + capacity +
-                ", amenities='" + amenities + '\'' +
+        return "Reservation{" +
+                "reservationId='" + reservationId + '\'' +
+                ", user=" + (user != null ? user.getName() : "null") +
+                ", room=" + (room != null ? room.getRoomId() : "null") +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                ", numberOfGuests=" + numberOfGuests +
+                ", totalPrice=" + totalPrice +
+                ", status='" + status + '\'' +
                 '}';
-    }
-
-    // Validation method
-    public boolean isValidRoom() {
-        return roomId != null && !roomId.trim().isEmpty() &&
-               roomType != null && !roomType.trim().isEmpty() &&
-               price >= 0 && capacity > 0;
-    }
-
-    // Room status methods
-    public String getAvailabilityStatus() {
-        return isAvailable ? "Available" : "Occupied";
-    }
-
-    public String getRoomDescription() {
-        StringBuilder description = new StringBuilder();
-        description.append(roomType).append(" room (ID: ").append(roomId).append(") ");
-        description.append("- $").append(String.format("%.2f", price)).append(" per night, ");
-        description.append("accommodates ").append(capacity).append(" guests");
-        
-        if (!amenities.isEmpty()) {
-            description.append(", amenities: ").append(amenities);
-        }
-        
-        return description.toString();
     }
 }
