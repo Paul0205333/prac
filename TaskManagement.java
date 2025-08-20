@@ -34,8 +34,6 @@ public class TaskManagement {
 		System.out.println("\nPending Tasks:");
 		list.show();
 		
-		
-		//input mismatch ihandle mo
 		while(true) {
 			System.out.print("\n1. Yes\n2. No\nWould you like to add or delete a task again? ");
 			try {
