@@ -111,11 +111,11 @@ public class TicTacToe {
 			}catch(InputMismatchException e) {
 				System.out.print("Input must be an Integer. Re-enter Slot Number: ");
 				s.nextLine();
-			}
-	
-			
+			}	
 		}
+		s.close();
 		System.out.println();
 		System.out.println("The Winner: Player " + winner);
 	}
 }
+
