@@ -96,8 +96,9 @@ public class TicTacToe {
 					printBoard();
 					turn = turn.equals("X")? "O": "X";
 					
-					if(turnNum == 10) {
+					if(turnNum == 9) {
 						System.out.println("It's a draw! Thank you for playing.");
+						break;
 					}else if(turnNum>=5) {
 						checkWinner();
 					}
@@ -111,11 +112,14 @@ public class TicTacToe {
 			}catch(InputMismatchException e) {
 				System.out.print("Input must be an Integer. Re-enter Slot Number: ");
 				s.nextLine();
-			}	
+			}
+	
+			
 		}
 		s.close();
 		System.out.println();
-		System.out.println("The Winner: Player " + winner);
+		if(winner!=null) {
+			System.out.println("The Winner: Player " + winner);
+		}
 	}
 }
-
